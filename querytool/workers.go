@@ -1,15 +1,13 @@
 package querytool
 
 import (
-	"fmt"
-	"os"
+	"log"
 )
 
 func Run(options *Options) {
 	tasks, err := LoadTasks(options.InputFilePath)
 	if err != nil {
-
-		os.Exit(1)
+		log.Fatal(err)
 	}
 	results := make(chan QueryStats, tasks.Len())
 
@@ -43,8 +41,7 @@ func runWorker(id int, tasks *TaskQueue, results chan QueryStats) {
 				// If this leaves zombie connections in the PostgreSQL server
 				// we'll need to clean up the connections first.
 				// I don't think it will though.
-				fmt.Fprintf(os.Stderr, "fatal error running query: %v", err)
-				os.Exit(1)
+				log.Fatalf("error running query: %v", err)
 			}
 			results <- stats
 		}
