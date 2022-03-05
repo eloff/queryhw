@@ -12,8 +12,13 @@ func Run(options *Options) []QueryStats {
 	if err != nil {
 		log.Fatal(err)
 	}
-	results := make(chan QueryStats, tasks.Len())
 
+	err = InitDB(options.DBConnectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	results := make(chan QueryStats, tasks.Len())
 	// liveWorkers is a shared atomic counter decremented when a worker exits
 	// when all workers exit then we'll close the results channel and
 	// compute the summary statistics below.
@@ -31,8 +36,8 @@ func Run(options *Options) []QueryStats {
 		}
 		allStats = append(allStats, stats)
 		if options.Verbose {
-			fmt.Printf("query for host %s executed in %dms by worker %d\n",
-				stats.Host, stats.Duration/time.Millisecond, stats.WorkerId)
+			fmt.Printf("query for host %s executed in %.2fms by worker %d\n",
+				stats.Host, float64(stats.Duration)/float64(time.Millisecond), stats.WorkerId)
 		}
 	}
 

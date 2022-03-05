@@ -4,6 +4,14 @@ import (
 	"time"
 )
 
+const cpuStatsQuery = `
+	SELECT time_bucket('1 minute', u.ts) as one_min, min(u.usage), max(u.usage)
+	FROM cpu_usage u
+	WHERE u.host = $1
+	AND u.ts BETWEEN $2 AND $3
+	GROUP BY one_min
+	ORDER BY one_min DESC`
+
 type QueryTask struct {
 	Queries []CPUQuery
 }
@@ -32,7 +40,14 @@ func (query *CPUQuery) Run() (QueryStats, error) {
 	// which is what we want to get an accurate duration calculation.
 	start := time.Now()
 	stats := QueryStats{Host: query.Host}
-	time.Sleep(100 * time.Millisecond)
+
+	err := query.executeQuery()
 	stats.Duration = time.Now().Sub(start)
-	return stats, nil
+	return stats, err
+}
+
+func (query *CPUQuery) executeQuery() error {
+	return executeQueryAndDiscardResults(
+		cpuStatsQuery, query.Host, query.Start, query.End,
+	)
 }

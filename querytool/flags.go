@@ -6,10 +6,16 @@ import (
 )
 
 type Options struct {
-	InputFilePath string
-	NumWorkers    int
-	Verbose       bool
+	DBConnectionString string
+	InputFilePath      string
+	NumWorkers         int
+	Verbose            bool
 }
+
+// This is not a good idea in a real app
+// The credentials will be stored in the binary
+// where anyone can read them.
+const dbConnectionStr = "postgres://postgres:password@127.0.0.1/homework?sslmode=disable"
 
 // ParseCommandOptions parses the CLI options and returns them as an Options struct
 func ParseCommandOptions() Options {
@@ -19,6 +25,7 @@ func ParseCommandOptions() Options {
 	numWorkers := flag.Int("n", runtime.GOMAXPROCS(0), "the number of concurrent workers to run")
 	queriesFile := flag.String("f", "-", "the path to a CSV file containing the queries to run")
 	verbose := flag.Bool("v", false, "print more verbose output as the program runs")
+	dbConnString := flag.String("d", dbConnectionStr, "database connection string for timescaledb, see docs for lib/pq")
 
 	flag.Parse()
 
@@ -26,6 +33,7 @@ func ParseCommandOptions() Options {
 	options.NumWorkers = *numWorkers
 	options.InputFilePath = *queriesFile
 	options.Verbose = *verbose
+	options.DBConnectionString = *dbConnString
 
 	return options
 }

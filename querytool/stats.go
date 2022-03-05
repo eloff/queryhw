@@ -23,11 +23,13 @@ func PrintSummaryStats(options *Options, totalDuration time.Duration, allStats [
 	stats := calculateSummaryStats(allStats)
 
 	fmt.Printf("Executed %d queries in %.2f seconds\n", len(allStats), float64(totalDuration)/float64(time.Second))
-	fmt.Printf("Total execution time for all queries was %.2f seconds, using %d worker threads. Speedup of %.1fx\n",
+	fmt.Printf("Total execution time for all queries was %.2f seconds, using %d worker threads. Parallel speedup of %.1fx\n",
 		float64(stats.Total)/float64(time.Second), options.NumWorkers, float64(stats.Total)/float64(totalDuration))
-	fmt.Printf("min=%dms, max=%dms, median=%dms, average=%dms\n",
-		stats.Min/time.Millisecond, stats.Max/time.Millisecond,
-		stats.Median/time.Millisecond, stats.Average/time.Millisecond)
+	fmt.Printf("min=%.2fms, max=%.2fms, median=%.2fms, average=%.2fms\n",
+		float64(stats.Min)/float64(time.Millisecond),
+		float64(stats.Max)/float64(time.Millisecond),
+		float64(stats.Median)/float64(time.Millisecond),
+		float64(stats.Average)/float64(time.Millisecond))
 }
 
 type SummaryStats struct {
