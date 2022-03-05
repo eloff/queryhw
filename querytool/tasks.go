@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+// There's a question whether this time interval should be
+// inclusive [start, end] or open-ended [start, end)
+// It's also a bit weird to display minute time intervals
+// but with start and end times that include seconds.
+// I think this query is most true to the requirements.
 const cpuStatsQuery = `
 	SELECT time_bucket('1 minute', u.ts) as one_min, min(u.usage), max(u.usage)
 	FROM cpu_usage u
@@ -41,12 +46,13 @@ func (query *CPUQuery) Run() (QueryStats, error) {
 	start := time.Now()
 	stats := QueryStats{Host: query.Host}
 
-	err := query.executeQuery()
+	numRows, err := query.executeQuery()
+	stats.NumResultRows = numRows
 	stats.Duration = time.Now().Sub(start)
 	return stats, err
 }
 
-func (query *CPUQuery) executeQuery() error {
+func (query *CPUQuery) executeQuery() (int, error) {
 	return executeQueryAndDiscardResults(
 		cpuStatsQuery, query.Host, query.Start, query.End,
 	)

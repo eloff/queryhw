@@ -36,8 +36,8 @@ func Run(options *Options) []QueryStats {
 		}
 		allStats = append(allStats, stats)
 		if options.Verbose {
-			fmt.Printf("query for host %s executed in %.2fms by worker %d\n",
-				stats.Host, float64(stats.Duration)/float64(time.Millisecond), stats.WorkerId)
+			fmt.Printf("query for host %s returns %d results and executed in %.2fms by worker %d\n",
+				stats.Host, stats.NumResultRows, float64(stats.Duration)/float64(time.Millisecond), stats.WorkerId)
 		}
 	}
 
