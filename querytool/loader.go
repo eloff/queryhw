@@ -4,7 +4,9 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"sort"
 	"time"
 )
 
@@ -28,11 +30,36 @@ func LoadTasks(csvFilePath string) (*TaskQueue, error) {
 		return nil, fmt.Errorf("LoadTasks: %w", err)
 	}
 
-	// TODO group queries by host
-	_ = queries
-	var tasks []QueryTask
+	tasks := make([]QueryTask, 0, len(queries))
+	if len(queries) == 0 {
+		log.Fatal("No input queries given")
+	}
 
-	// TODO sort tasks by number of queries, descending
+	// Group queries by hostname, we can do this by grouping with a hash map
+	// or by sorting, since the order between queries doesn't matter.
+	// A hash map is more efficient: O(N) vs O(N*Log(N)), but we'll need
+	// multiple allocations with the hash map (for map and subarrays)
+	// while the sort is in-place.
+	//
+	// There's no easy way to know which is best, so I'll just take a guess.
+	groupedQueries := make(map[string]QueryTask, len(queries))
+	for _, query := range queries {
+		task := groupedQueries[query.Host]
+		task.Queries = append(task.Queries, query)
+		groupedQueries[query.Host] = task
+	}
+
+	// Collect all the tasks into a slice
+	for _, task := range groupedQueries {
+		tasks = append(tasks, task)
+	}
+
+	// Sort tasks by number of queries, descending
+	// This is not necessary, but it seems to result in better CPU utilization
+	// Otherwise a worker can end up processing a large task with many queries
+	// at the end while the other workers are idle. It's better to do the big
+	// tasks first.
+	sort.Sort(ByNumberOfQueries(tasks))
 
 	return NewTaskQueue(tasks), nil
 }
