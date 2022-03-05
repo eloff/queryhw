@@ -55,7 +55,8 @@ func LoadTasks(csvFilePath string) (*TaskQueue, error) {
 	}
 
 	// Sort tasks by number of queries, descending
-	// This is not necessary, but it seems to result in better CPU utilization
+	// This is not necessary, but it seems to result in slightly
+	// better CPU utilization under some workloads.
 	// Otherwise a worker can end up processing a large task with many queries
 	// at the end while the other workers are idle. It's better to do the big
 	// tasks first.
