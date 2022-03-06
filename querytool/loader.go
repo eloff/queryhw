@@ -79,7 +79,7 @@ func loadCSV(reader io.Reader) ([]CPUQuery, error) {
 			return nil, fmt.Errorf("error reading CSV: %w", err)
 		}
 		if len(record) != 3 {
-			return nil, fmt.Errorf("expected CSV row to contain 3 values: %d", len(record))
+			return nil, fmt.Errorf("expected CSV row to contain 3 values: got %d", len(record))
 		}
 		if len(queries) == 0 && record[0] == "hostname" {
 			// This is the header row, skip it
