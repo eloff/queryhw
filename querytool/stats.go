@@ -139,6 +139,7 @@ func calculateSummaryStats(allStats []QueryStats) SummaryStats {
 
 func computePercentile(allStats []QueryStats, percentile float64) time.Duration {
 	index := float64(len(allStats)) * percentile
+
 	// If the index is a whole number, then the percentile value
 	// is the average of the value at the index and the value that follows
 	// Otherwise we round it up to the nearest whole number and
@@ -146,6 +147,7 @@ func computePercentile(allStats []QueryStats, percentile float64) time.Duration 
 
 	roundedUp := math.Ceil(index)
 	value := allStats[int(roundedUp)-1].Duration
+	// I'm not 100% sure this shouldn't be abs(roundedUp-index) < epsilon
 	if roundedUp == index {
 		// Index was a whole number so take the average
 		value = (value + allStats[int(roundedUp)].Duration) / 2
