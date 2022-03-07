@@ -64,22 +64,34 @@ input sources and values for -n (number of workers.)
 
 ### Troubleshooting
 
+Because nothing ever seems to work quite like it's supposed to.
+
 If you get an error like this, the database is still initializing, give it more time:
 
     error running query: dial tcp db:5432: connect: connection refused
 
-I had this error on Mac OS with an outdated version of docker.
+Another cause of a similar error was using an outdated version of docker.
 Updating docker, rebooting, and then following the instructions below
 to recreate the docker containers from scratch solved it.
 
-You can verify the database was started and setup correctly by running
+If you get an error like:
+
+    error running query: dial tcp: lookup db: Temporary failure in name resolution
+
+I solved this by following the instructions to recreate the docker container
+from scratch below, and then running:
+
+    sudo service docker stop
+    sudo service docker start
+
+If troubleshooting, you can verify the database was started and setup correctly by running
 
     psql -h 127.0.0.1 -p 5438 -U postgres -d homework
     select count(*) from cpu_usage;
 
 This requires psql installed on your local machine. There should be 345600 rows.
 It's also possible to use docker to attach an interactive shell to the db service
-and use psql from there.
+and use psql from there (but I expect anyone at Timescale has it installed!)
 
 If something goes wrong you may need to recreate the docker containers from scratch.
 
