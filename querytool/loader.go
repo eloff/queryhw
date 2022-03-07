@@ -69,6 +69,7 @@ func LoadTasks(csvFilePath string) (*TaskQueue, error) {
 func loadCSV(reader io.Reader) ([]CPUQuery, error) {
 	var queries []CPUQuery
 
+	hasHeader := false
 	csvReader := csv.NewReader(reader)
 	for {
 		record, err := csvReader.Read()
@@ -78,21 +79,30 @@ func loadCSV(reader io.Reader) ([]CPUQuery, error) {
 		if err != nil {
 			return nil, fmt.Errorf("error reading CSV: %w", err)
 		}
+
+		line := len(queries)
+		if hasHeader {
+			line += 2
+		} else {
+			line++
+		}
+
 		if len(record) != 3 {
-			return nil, fmt.Errorf("expected CSV row to contain 3 values: got %d", len(record))
+			return nil, fmt.Errorf("line %d: expected CSV row to contain 3 values: got %d", line, len(record))
 		}
 		if len(queries) == 0 && record[0] == "hostname" {
 			// This is the header row, skip it
+			hasHeader = true
 			continue
 		}
 
 		start, err := time.Parse(timeFormat, record[1])
 		if err != nil {
-			return nil, fmt.Errorf("start time must be formatted like %s, not %s", timeFormat, record[1])
+			return nil, fmt.Errorf("line %d: start time must be formatted like %s, not %s", line, timeFormat, record[1])
 		}
 		end, err := time.Parse(timeFormat, record[2])
 		if err != nil {
-			return nil, fmt.Errorf("end time must be formatted like %s, not %s", timeFormat, record[2])
+			return nil, fmt.Errorf("line %d: end time must be formatted like %s, not %s", line, timeFormat, record[2])
 		}
 
 		// There's the question of timezones here.

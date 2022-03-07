@@ -17,37 +17,37 @@ func TestLoadCSVError(t *testing.T) {
 		// Malformed header
 		{
 			csv: "host,start,end\n",
-			err: errors.New("start time must be formatted like 2006-01-02 15:04:05, not start"),
+			err: errors.New("line 1: start time must be formatted like 2006-01-02 15:04:05, not start"),
 		},
 		// Too many values
 		{
 			csv: "12,4,5,6",
-			err: errors.New("expected CSV row to contain 3 values: got 4"),
+			err: errors.New("line 1: expected CSV row to contain 3 values: got 4"),
 		},
 		// Too few values
 		{
 			csv: "12,4",
-			err: errors.New("expected CSV row to contain 3 values: got 2"),
+			err: errors.New("line 1: expected CSV row to contain 3 values: got 2"),
 		},
 		// Malformed start date (missing time)
 		{
 			csv: "1,2006-01-02,2006-01-02 15:04:05",
-			err: errors.New("start time must be formatted like 2006-01-02 15:04:05, not 2006-01-02"),
+			err: errors.New("line 1: start time must be formatted like 2006-01-02 15:04:05, not 2006-01-02"),
 		},
 		// Malformed start date (invalid)
 		{
 			csv: "bar,2006-13-02 15:04:05,2006-01-02 15:04:05",
-			err: errors.New("start time must be formatted like 2006-01-02 15:04:05, not 2006-13-02 15:04:05"),
+			err: errors.New("line 1: start time must be formatted like 2006-01-02 15:04:05, not 2006-13-02 15:04:05"),
 		},
 		// Malformed end date (time zone)
 		{
 			csv: "hostname,start,end\nfoo,2006-01-02 15:04:05,2006-01-02 15:04:05Z07:00",
-			err: errors.New("end time must be formatted like 2006-01-02 15:04:05, not 2006-01-02 15:04:05Z07:00"),
+			err: errors.New("line 2: end time must be formatted like 2006-01-02 15:04:05, not 2006-01-02 15:04:05Z07:00"),
 		},
 		// Not a CSV
 		{
 			csv: "{foo\tbar\tbaz}",
-			err: errors.New("expected CSV row to contain 3 values: got 1"),
+			err: errors.New("line 1: expected CSV row to contain 3 values: got 1"),
 		},
 	}
 
