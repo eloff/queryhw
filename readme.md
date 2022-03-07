@@ -31,7 +31,7 @@ for how to install docker and docker-compose on your platform.
 
 Clone the git repo and cd into it.
 
-    git clone TODO
+    git clone git@github.com:eloff/queryhw.git
     cd queryhw
 
 Then start the Go container and connect to an interactive session:
