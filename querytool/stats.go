@@ -47,12 +47,14 @@ func PrintSummaryStats(options *Options, totalDuration time.Duration, allStats [
 	fmt.Printf("Executed %d queries in %.2f seconds\n", len(allStats), float64(totalDuration)/float64(time.Second))
 	fmt.Printf("Total execution time for all queries was %.2f seconds, using %d worker threads. Parallel speedup of %.1fx\n",
 		float64(stats.Total)/float64(time.Second), options.NumWorkers, float64(stats.Total)/float64(totalDuration))
-	fmt.Printf(`min query duration=%.2fms
-max query duration=%.2fms
-average=%.2fms
-median=%.2fms
-95th percentile=%.2fms
-standard deviation=%.2fms
+	fmt.Printf(`
+min query duration = %.2fms
+max query duration = %.2fms
+average = %.2fms
+median = %.2fms
+95th percentile = %.2fms
+standard deviation = %.2fms
+total query duration = %.2fms
 `,
 		float64(stats.Min)/float64(time.Millisecond),
 		float64(stats.Max)/float64(time.Millisecond),
@@ -60,6 +62,7 @@ standard deviation=%.2fms
 		float64(stats.Median)/float64(time.Millisecond),
 		float64(stats._95Percentile)/float64(time.Millisecond),
 		stats.StdDev,
+		float64(stats.Total)/float64(time.Millisecond),
 	)
 }
 
