@@ -35,6 +35,13 @@ Clone the git repo and cd into it.
     git clone git@github.com:eloff/queryhw.git
     cd queryhw
 
+Create a pgdata directory. **Important do not skip this step.**
+Unfortunately git doesn't allow an empty directory and Postgres doesn't
+like a directory containing any files, including hidden dot-prefixed files
+like .keep
+    
+    mkdir pgdata
+
 Then start the Go container and connect to an interactive session:
 
     docker-compose run --rm app

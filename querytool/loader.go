@@ -108,12 +108,16 @@ func loadCSV(reader io.Reader) ([]CPUQuery, error) {
 		// There's the question of timezones here.
 		// The database uses timestamptz and the input
 		// data in cpu_usage.csv doesn't specify the timezone.
-		// PostgreSQL handles this by storing everything as UTC.
+		// PostgreSQL handles this by storing everything as UTC
+		// AFTER converting it from the locally configured TimeZone
+		// value. However, this defaults to UTC and we don't change it.
+		// See: https://www.postgresql.org/docs/current/datatype-datetime.html#DATATYPE-TIMEZONES
 		// The input times in query_params.csv that we're loading
 		// here also don't have timezones. That means we need to
 		// treat these as UTC values as well so both the
 		// input and query times are treated the same way.
 		// Go also assumes UTC, so we don't need any code here.
+		// Otherwise we would use ParseInLocation instead.
 
 		query := CPUQuery{
 			Host:  record[0],
