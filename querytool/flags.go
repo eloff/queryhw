@@ -15,7 +15,7 @@ type Options struct {
 // This is not a good idea in a real app
 // The credentials will be stored in the binary
 // where anyone can read them.
-const dbConnectionStr = "postgres://postgres:password@127.0.0.1/homework?sslmode=disable"
+const dbConnectionStr = "postgres://postgres:password@db/homework?sslmode=disable"
 
 // ParseCommandOptions parses the CLI options and returns them as an Options struct
 func ParseCommandOptions() Options {
