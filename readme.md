@@ -23,7 +23,7 @@ Usage of ./queryhw:
 ### Prerequisites
 
 You'll need docker and docker-compose. 
-These instructions are tested on Linux with docker=20.10.12 (community) and docker-compose 1.29.2
+These instructions are tested on Linux and Mac OS with docker=20.10.12 (community) and docker-compose 1.29.2
 See https://docs.docker.com/engine/install/ and https://docs.docker.com/compose/install/
 for how to install docker and docker-compose on your platform.
 
