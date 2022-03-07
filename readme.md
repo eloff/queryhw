@@ -6,6 +6,7 @@ with a configurable number of parallel worker threads.
 Queryhw is written in Go.
 
 Usage of ./queryhw:
+
     -d string
         database connection string for timescaledb, see docs for lib/pq
         (default "postgres://postgres:xxx@db/homework?sslmode=disable")
