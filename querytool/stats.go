@@ -58,8 +58,8 @@ standard deviation=%.2fms
 		float64(stats.Max)/float64(time.Millisecond),
 		float64(stats.Average)/float64(time.Millisecond),
 		float64(stats.Median)/float64(time.Millisecond),
-		float64(stats._95Percentile)/float64(time.Millisecond), // TODO
-		stats.StdDev, // TODO
+		float64(stats._95Percentile)/float64(time.Millisecond),
+		stats.StdDev,
 	)
 }
 

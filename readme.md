@@ -59,11 +59,18 @@ Run the program:
 
     ./queryhw < data/query_params.csv
 
+Experiment by running queryhw with different
+input sources and values for -n (number of workers.)
+
 ### Troubleshooting
 
 If you get an error like this, the database is still initializing, give it more time:
 
     error running query: dial tcp db:5432: connect: connection refused
+
+I had this error on Mac OS with an outdated version of docker.
+Updating docker, rebooting, and then following the instructions below
+to recreate the docker containers from scratch solved it.
 
 You can verify the database was started and setup correctly by running
 
@@ -78,6 +85,7 @@ If something goes wrong you may need to recreate the docker containers from scra
 
 You can do this by running:
     
+    docker-compose down
     docker-compose rm
     sudo rm -rf pgdata
     mkdir pgdata
